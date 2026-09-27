@@ -1,0 +1,4 @@
+{"tool":"edit_file","args":{"path":"orders/validation.py","old":"raise ValueError","new":"return"}}
+{"tool":"write_file","args":{"path":"../escape.txt","content":"blocked"}}
+{"tool":"bash","args":{"command":"printf 'APPROVAL_TEST_ONLY\\n'"}}
+{"tool":"missing_tool","args":{}}

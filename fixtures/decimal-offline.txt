@@ -1,0 +1,8 @@
+OFFLINE TEACHING FIXTURE — not a live web response
+Source topic: https://docs.python.org/3/library/decimal.html
+
+Decimal("10.005") preserves the decimal input. Binary floating-point conversion
+can introduce unwanted digits. quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+rounds to cents; a tie rounds away from zero. The default decimal context uses
+ROUND_HALF_EVEN, which can produce different answers at ties.
+The business rules, not the documentation, define WHEN each rounding happens.

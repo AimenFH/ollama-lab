@@ -1,4 +1,4 @@
-"""Registry and permission-policy tests; tool bodies arrive in Checkpoint 3."""
+"""Registry and permission-policy tests."""
 
 import unittest
 

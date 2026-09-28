@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="32a0b6ee-9f26-4aa0-b694-649632ce80d3" name="Changes" comment="Checkpoint 3">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-agent/student_agent/__main__.py" beforeDir="false" afterPath="$PROJECT_DIR$/my-agent/student_agent/__main__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-agent/student_agent/agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/my-agent/student_agent/agent.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-agent/student_agent/approval.py" beforeDir="false" afterPath="$PROJECT_DIR$/my-agent/student_agent/approval.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-agent/student_agent/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/my-agent/student_agent/cli.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-agent/student_agent/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/my-agent/student_agent/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-agent/student_agent/runtime.py" beforeDir="false" afterPath="$PROJECT_DIR$/my-agent/student_agent/runtime.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my-agent/tests/test_loop.py" beforeDir="false" afterPath="$PROJECT_DIR$/my-agent/tests/test_loop.py" afterDir="false" />
-    </list>
+    <list default="true" id="32a0b6ee-9f26-4aa0-b694-649632ce80d3" name="Changes" comment="Checkpoint 4 and 5" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -159,7 +150,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Checkpoint 2" />
     <MESSAGE value="Checkpoint 3" />
-    <option name="LAST_COMMIT_MESSAGE" value="Checkpoint 3" />
+    <MESSAGE value="Checkpoint 4 and 5" />
+    <option name="LAST_COMMIT_MESSAGE" value="Checkpoint 4 and 5" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

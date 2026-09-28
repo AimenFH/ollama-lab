@@ -127,6 +127,13 @@ class LoopTest(unittest.TestCase):
         self.assertEqual(json.loads(observation["content"])["result"]["status"], "denied")
         self.assertEqual(sum(m["role"] == "system" for m in seen[1]), 1)
 
+    def test_repeated_failed_request_gets_controller_note(self):
+        request = '{"tool":"bash","args":{"command":"printf hi"}}'
+        model, seen = scripted(request, request, '{"tool":"list_files","args":{}}', request, '{"final":"x"}')
+        run_agent(model, RecordingRuntime({"status": "denied", "output": "no"}), "task")
+        notes = [("controller_note" in json.loads(s[-1]["content"])) for s in seen[1:]]
+        self.assertEqual(notes, [False, True, False, False])
+
     def test_system_prompt_lists_only_advertised_tools(self):
         model, seen = scripted('{"final":"done"}')
         run_agent(model, Runtime(".", mode="read-only", enabled={"read_file", "bash"}), "task")

@@ -60,6 +60,7 @@ class OllamaModel:
                 raw = response.read(self.max_response_bytes + 1)
         except urllib.error.HTTPError as exc:
             detail = exc.read(2_000).decode("utf-8", "replace")
+            exc.close()
             raise ModelError(f"Ollama returned HTTP {exc.code}: {detail}") from None
         except OSError as exc:
             raise ModelError(f"cannot reach Ollama at {self.endpoint}: {exc}") from None

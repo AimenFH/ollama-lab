@@ -5,8 +5,9 @@ import sys
 PROMPT = "Approve this command only? Type yes: "
 
 
-def terminal_approve(command, cwd, read=input, write=None, log=None):
+def terminal_approve(command, cwd, read=None, write=None, log=None):
     """Show the full command and working directory; approve only on exactly `yes`."""
+    read = read or input
     write = write or (lambda text: print(text, file=sys.stderr))
     write("\nThe agent wants to run a bash command.")
     write(f"Command:           {command}")

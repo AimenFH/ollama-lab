@@ -38,7 +38,8 @@ MAX_FETCH_BYTES = 12_000
 FETCH_PATH_CHARS = frozenset("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/._-")
 MAX_FETCH_PATH_CHARS = 200
 DEFAULT_FIXTURES_DIR = Path(__file__).resolve().parents[2] / "fixtures"
-OFFLINE_FIXTURES = {"https://docs.python.org/3/library/decimal.html": "decimal-offline.txt"}
+DECIMAL_DOCS_URL = "https://docs.python.org/3/library/decimal.html"
+OFFLINE_FIXTURES = {DECIMAL_DOCS_URL: "decimal-offline.txt"}
 
 BASH_TIMEOUT = 20
 MAX_BASH_OUTPUT = 12_000
@@ -271,7 +272,7 @@ def check_url(url):
     if parts.hostname != FETCH_HOST or port not in (None, 443):
         raise ToolDenied(f"only {FETCH_HOST} on the default HTTPS port is approved")
     if "?" in url or "#" in url:
-        raise ToolDenied("URLs with a query or fragment are not allowed")
+        raise ToolDenied("URLs with a ?query or #fragment are not allowed; request the page URL without them")
     if len(parts.path) > MAX_FETCH_PATH_CHARS or not set(parts.path) <= FETCH_PATH_CHARS:
         raise ToolDenied("the URL path must be a plain documentation path")
 
@@ -279,13 +280,14 @@ def check_url(url):
 def fetch_url(runtime, url):
     check_url(url)
     if runtime.offline:
-        fixture = OFFLINE_FIXTURES.get(url)
+        fixture = runtime.offline_fixtures.get(url)
         if fixture is None:
-            raise ToolError(f"offline mode has no fixture for {url}; available: {sorted(OFFLINE_FIXTURES)}")
+            raise ToolError(f"offline mode has no fixture for {url}; available: {sorted(runtime.offline_fixtures)}")
         return {
             "url": url,
             "source": "offline fixture",
-            "content": (runtime.fixtures_dir / fixture).read_text(encoding="utf-8"),
+            "fixture": fixture.name,
+            "content": fixture.read_text(encoding="utf-8"),
             "truncated": False,
             "note": "offline fixture, not a live response from docs.python.org",
         }
@@ -301,6 +303,7 @@ def fetch_url(runtime, url):
             charset = response.headers.get_content_charset() or "utf-8"
             raw = response.read(MAX_FETCH_BYTES + 1)
     except urllib.error.HTTPError as exc:
+        exc.close()
         if 300 <= exc.code < 400:
             raise ToolError(f"redirect rejected: {url} redirects to {exc.headers.get('Location')}") from None
         raise ToolError(f"{url} returned HTTP {exc.code}") from None
@@ -411,7 +414,9 @@ REGISTRY = {
         "Replace text `old` with `new`; `old` must occur exactly once.", ("path", "old", "new"), "write", edit_file
     ),
     "fetch_url": Tool(
-        "Read approved HTTPS documentation from docs.python.org.", ("url",), "fetch", fetch_url
+        "Read a docs.python.org page by its plain URL, without ?query or #fragment, "
+        "e.g. https://docs.python.org/3/library/decimal.html",
+        ("url",), "fetch", fetch_url,
     ),
     "bash": Tool(
         "Run a local bash command in the workspace after the user approves it.", ("command",), "bash", bash
@@ -435,6 +440,7 @@ class Runtime:
         approve=None,
         offline=False,
         fixtures_dir=DEFAULT_FIXTURES_DIR,
+        offline_fixture=None,
     ):
         if mode not in MODE_CAPABILITIES:
             raise ValueError(f"unknown mode {mode!r}; choose from {sorted(MODE_CAPABILITIES)}")
@@ -447,7 +453,10 @@ class Runtime:
         self.enabled = enabled
         self.approve = approve or (lambda _command, _cwd: False)
         self.offline = offline
-        self.fixtures_dir = Path(fixtures_dir)
+        self.offline_fixtures = {url: Path(fixtures_dir) / name for url, name in OFFLINE_FIXTURES.items()}
+        if offline_fixture is not None:
+            # Explicit substitute for the decimal page, e.g. the web-injection fixture.
+            self.offline_fixtures[DECIMAL_DOCS_URL] = Path(offline_fixture)
         self.fetch_opener = urllib.request.build_opener(_RejectRedirects)
 
     def allows(self, name):

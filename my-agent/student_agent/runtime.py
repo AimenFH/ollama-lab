@@ -54,9 +54,6 @@ class ToolError(Exception):
     """The request was permitted but could not be completed."""
 
 
-# --- Workspace boundary -------------------------------------------------------
-
-
 def _is_hidden(parts):
     return any(part.startswith(".") for part in parts)
 
@@ -145,9 +142,6 @@ def _excerpt(line, query):
     return line[start:start + MAX_EXCERPT_CHARS] + "..."
 
 
-# --- File tools ---------------------------------------------------------------
-
-
 def list_files(runtime):
     files, more = _workspace_files(runtime.root, MAX_LIST_FILES)
     result = {"files": files, "truncated": more}
@@ -227,9 +221,6 @@ def edit_file(runtime, path, old, new):
         raise ToolError(f"the edited file would be {len(updated)} bytes; the limit is {MAX_EDIT_BYTES}")
     target.write_bytes(updated)
     return f"replaced 1 occurrence in {name}"
-
-
-# --- Documentation tool -------------------------------------------------------
 
 
 class _RejectRedirects(urllib.request.HTTPRedirectHandler):
@@ -325,9 +316,6 @@ def fetch_url(runtime, url):
             f"only the first {MAX_FETCH_BYTES} bytes were read; the rest of the page was not seen"
         )
     return result
-
-
-# --- Local command tool -------------------------------------------------------
 
 
 def _bash_environment():
@@ -455,7 +443,6 @@ class Runtime:
         self.offline = offline
         self.offline_fixtures = {url: Path(fixtures_dir) / name for url, name in OFFLINE_FIXTURES.items()}
         if offline_fixture is not None:
-            # Explicit substitute for the decimal page, e.g. the web-injection fixture.
             self.offline_fixtures[DECIMAL_DOCS_URL] = Path(offline_fixture)
         self.fetch_opener = urllib.request.build_opener(_RejectRedirects)
 
